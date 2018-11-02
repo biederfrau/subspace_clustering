@@ -90,7 +90,7 @@ def merge(seeds, clusters, k_new, l_new):
         merged_clusters.append((a[0], b[0], centroid, energy))
 
     while len(seeds) > k_new:
-        idx, (i_, j_, centroid, energy) = min(enumerate(merged_clusters), key=lambda t: t[1][3])
+        i_, j_, centroid, energy = min(merged_clusters, key=lambda t: t[1][3])
 
         seeds[i_] = centroid
         clusters[i_] += clusters[j_]
@@ -99,7 +99,6 @@ def merge(seeds, clusters, k_new, l_new):
         del clusters[j_]
 
         merged_clusters = [t for t in merged_clusters if t[0] != j_ and t[1] != j_]
-
         for idx, (i, j, centroid, energy) in enumerate(merged_clusters):
             if i > j_ and j > j_:
                 merged_clusters[idx] = (i-1, j-1, centroid, energy)
