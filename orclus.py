@@ -92,18 +92,18 @@ def merge(seeds, clusters, k_new, l_new):
 
         for idx, (i, j, centroid, energy) in enumerate(merged_clusters):
             if i > j_ and j > j_:
-                merged_clusters[idx] = (i - 1, j - 1, centroid, energy)
+                merged_clusters[idx] = (i-1, j-1, centroid, energy)
             elif i >= j_:
-                merged_clusters[idx] = (i - 1, j, centroid, energy)
+                merged_clusters[idx] = (i-1, j,   centroid, energy)
             elif j >= j_:
-                merged_clusters[idx] = (i, j - 1, centroid, energy)
+                merged_clusters[idx] = (i  , j-1, centroid, energy)
 
         for idx, (i, j, centroid, energy) in enumerate(merged_clusters):
             if i != i_: continue
 
             merged_cluster = clusters[i] + clusters[j]
             vectors = find_vectors(merged_cluster, l_new)
-            centroid = np.sum(merged_cluster, axis = 0)/len(merged_cluster)
+            centroid = np.sum(merged_cluster, axis=0)/len(merged_cluster)
             energy = cluster_energy(merged_cluster, centroid, vectors)
 
             merged_clusters[idx] = ((i, j, centroid, energy))
@@ -112,4 +112,5 @@ def merge(seeds, clusters, k_new, l_new):
 
 
 data, y = arff_to_ndarray("diabetes.arff")
-orclus(np.matrix(data), 2, 2)
+clusters = orclus(np.matrix(data), 2, 3)
+print(len(clusters))
