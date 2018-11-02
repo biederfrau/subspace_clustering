@@ -103,9 +103,9 @@ def merge(seeds, clusters, k_new, l_new):
         for idx, (i, j, centroid, energy) in enumerate(merged_clusters):
             if i > j_ and j > j_:
                 merged_clusters[idx] = (i-1, j-1, centroid, energy)
-            elif i >= j_:
+            elif i > j_:
                 merged_clusters[idx] = (i-1, j,   centroid, energy)
-            elif j >= j_:
+            elif j > j_:
                 merged_clusters[idx] = (i  , j-1, centroid, energy)
 
         for idx, (i, j, centroid, energy) in enumerate(merged_clusters):
