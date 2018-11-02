@@ -28,6 +28,14 @@ def orclus(DB, k, l, alpha=0.5, k0=None):
         print("target dimensionality must be lower than input dimensionality")
         return None
 
+    if kc >= DB.shape[0]:
+        print("default k0 does not work (more inital cluster centers than data points). specify different k0")
+        return None
+
+    if k >= DB.shape[0]:
+        print("k is larger or equal n but should be k << n")
+        return None
+
     seeds = list(DB[random.sample(range(len(DB)), kc)]) # TODO: kmeans++
     vectors = [np.matrix(np.eye(lc))]*kc
 
