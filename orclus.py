@@ -42,12 +42,11 @@ def orclus(DB, k, l, alpha=0.5, k0=None):
         vectors = [find_vectors(cluster, kc) for cluster in clusters]
 
         print("merge")
-        seeds, clusters = merge(seeds, clusters, k_new, l_new)
+        seeds, clusters, vectors = merge(seeds, clusters, k_new, l_new)
 
         kc = k_new; lc = l_new
         print(f"new kc = {kc}")
 
-    vectors = [find_vectors(cluster, kc) for cluster in clusters]
     seeds, clusters = assign(DB, seeds, vectors)
 
     return (clusters, vectors)
@@ -111,7 +110,7 @@ def merge(seeds, clusters, k_new, l_new):
 
             merged_clusters[idx] = ((i, j, centroid, energy))
 
-    return (seeds, clusters)
+    return (seeds, clusters, [find_vectors(cluster, k_new) for cluster in clusters])
 
 
 data, y = arff_to_ndarray("diabetes.arff")
