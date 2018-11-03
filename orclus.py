@@ -7,12 +7,10 @@ import numpy.linalg as linalg
 from utils import arff_to_ndarray
 from sys import exit
 
-import pandas as pd
-
 import itertools
-import random
 
 from pprint import pprint
+import seeding_strategy
 
 def pdist(x, y, vectors):
     return linalg.norm(vectors.T*x.T - vectors.T*y.T)
@@ -36,7 +34,7 @@ def orclus(DB, k, l, alpha=0.5, k0=None):
         print("k is larger or equal n but should be k << n")
         return None
 
-    seeds = list(DB[random.sample(range(len(DB)), kc)]) # TODO: kmeans++
+    seeds = seeding_strategy.kmeanspp(DB, k)
     vectors = [np.matrix(np.eye(lc))]*kc
 
     beta = exp((-log(lc/l)*log(1/alpha))/log(kc/k))
