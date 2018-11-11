@@ -64,8 +64,8 @@ def orclus(DB, k, l, alpha=0.5, k0=None):
     return (clusters, seeds, vectors)
 
 def find_vectors(cluster, q):
-    va, ve = linalg.eigh(np.cov(np.vstack(cluster), rowvar=False))
-    return np.matrix(ve[:, np.argsort(va)[:q]])
+    _, v = linalg.eigh(np.cov(np.vstack(cluster), rowvar=False))
+    return np.matrix(v[:, 0:q])
 
 def assign(DB, seeds, vectors):
     clusters = [[] for _ in range(len(seeds))]
