@@ -50,7 +50,7 @@ def orclus(DB, k, l, alpha=0.5, k0=None):
         k_new = int(max(k, kc*alpha)); l_new = int(max(l, lc*beta))
 
         logging.info("finding cluster vectors")
-        vectors = [find_vectors(cluster, kc) for cluster in clusters]
+        vectors = [find_vectors(cluster, lc) for cluster in clusters]
 
         logging.info("merging clusters")
         seeds, clusters, vectors = merge(seeds, clusters, k_new, l_new)
@@ -64,8 +64,8 @@ def orclus(DB, k, l, alpha=0.5, k0=None):
     return (clusters, seeds, vectors)
 
 def find_vectors(cluster, q):
-    _, v = linalg.eigh(np.cov(np.vstack(cluster), rowvar=False))
-    return np.matrix(v[:, 0:q])
+    va, ve = linalg.eigh(np.cov(np.vstack(cluster), rowvar=False))
+    return np.matrix(ve[:, np.argsort(va)[:q]])
 
 def assign(DB, seeds, vectors):
     clusters = [[] for _ in range(len(seeds))]
