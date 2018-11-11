@@ -5,12 +5,17 @@ import numpy as np
 import numpy.linalg as linalg
 
 from utils import arff_to_ndarray
+import sys
 from sys import exit
 
 import itertools
 
 from pprint import pprint
 import seeding_strategy
+
+import logging
+
+logging.basicConfig(stream=sys.stderr, level=logging.NOTSET) # set to warning, error or critical to silence
 
 def pdist(x, y, vectors):
     return linalg.norm(vectors.T*x.T - vectors.T*y.T)
@@ -40,23 +45,23 @@ def orclus(DB, k, l, alpha=0.5, k0=None):
     beta = exp((-log(lc/l)*log(1/alpha))/log(kc/k))
 
     while kc > k:
-        print("assign")
+        logging.info("assigning points to centroids")
         seeds, clusters = assign(DB, seeds, vectors)
         k_new = int(max(k, kc*alpha)); l_new = int(max(l, lc*beta))
 
-        print("find vectors")
+        logging.info("finding cluster vectors")
         vectors = [find_vectors(cluster, kc) for cluster in clusters]
 
-        print("merge")
+        logging.info("merging clusters")
         seeds, clusters, vectors = merge(seeds, clusters, k_new, l_new)
 
         kc = k_new; lc = l_new
-        print(f"new kc = {kc}")
-        print(f"new lc = {lc}")
+        logging.info(f"new kc = {kc}")
+        logging.info(f"new lc = {lc}")
 
     seeds, clusters = assign(DB, seeds, vectors)
 
-    return (clusters, vectors)
+    return (clusters, seeds, vectors)
 
 def find_vectors(cluster, q):
     _, v = linalg.eigh(np.cov(np.vstack(cluster), rowvar=False))
@@ -118,9 +123,24 @@ def merge(seeds, clusters, k_new, l_new):
 
     return (seeds, clusters, [find_vectors(cluster, l_new) for cluster in clusters])
 
+def predict(DB, seeds, vectors):
+    clustering = []
+    for p in DB:
+        dist = []
+        for s, v in zip(seeds, vectors):
+            dist.append(pdist(p, s, v))
+
+        clustering.append(np.argmin(dist))
+
+    return clustering
 
 data, y = arff_to_ndarray("diabetes.arff")
-clusters, vectors = orclus(np.matrix(data), 2, 3)
-print(len(clusters))
+clusters, seeds, vectors = orclus(np.matrix(data), 2, 3)
 
+print("")
+print("="*10)
+print("no. of clusters:", len(clusters))
+print("\nvector sets:")
 pprint(vectors)
+
+print("\nprediction vector:", predict(np.matrix(data), seeds, vectors)[0:20], '...')
