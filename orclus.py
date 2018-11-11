@@ -42,7 +42,7 @@ def orclus(DB, k, l, alpha=0.5, k0=None):
     while kc > k:
         print("assign")
         seeds, clusters = assign(DB, seeds, vectors)
-        k_new = int(max(k, kc*beta)); l_new = int(max(l, lc*alpha))
+        k_new = int(max(k, kc*alpha)); l_new = int(max(l, lc*beta))
 
         print("find vectors")
         vectors = [find_vectors(cluster, kc) for cluster in clusters]
