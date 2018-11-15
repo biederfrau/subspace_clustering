@@ -18,7 +18,7 @@ import logging
 logging.basicConfig(stream=sys.stderr, level=logging.NOTSET) # set to warning, error or critical to silence
 
 def pdist(x, y, vectors):
-    return linalg.norm(vectors.T*x.T - vectors.T*y.T)
+    return linalg.norm(vectors.T*x.T - vectors.T*y.T, 2)
 
 def cluster_energy(cluster, centroid, vectors):
     return np.sum([pdist(p, centroid, vectors)**2 for p in cluster])/len(cluster)
