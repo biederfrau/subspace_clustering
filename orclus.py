@@ -40,7 +40,7 @@ def orclus(DB, k, l, alpha=0.5, k0=None):
         return None
 
     seeds = seeding_strategy.kmeanspp(DB, kc)
-    vectors = [np.matrix(np.eye(lc))]*kc
+    vectors = [np.eye(lc)]*kc
 
     beta = exp((-log(lc/l)*log(1/alpha))/log(kc/k))
 
@@ -65,7 +65,7 @@ def orclus(DB, k, l, alpha=0.5, k0=None):
 
 def find_vectors(cluster, q):
     _, v = linalg.eigh(np.cov(np.vstack(cluster), rowvar=False))
-    return np.matrix(v[:, 0:q])
+    return v[:, 0:q]
 
 def assign(DB, seeds, vectors):
     clusters = [[] for _ in range(len(seeds))]
@@ -136,7 +136,7 @@ def predict(DB, seeds, vectors):
 
 if __name__ == '__main__':
     data, y = arff_to_ndarray("diabetes.arff")
-    clusters, seeds, vectors = orclus(np.matrix(data), 2, 3)
+    clusters, seeds, vectors = orclus(data, 2, 3)
 
     print("")
     print("="*10)
