@@ -31,15 +31,15 @@ def orclus(DB, k, l, alpha=0.5, k0=None):
         print("target dimensionality must be lower-equal than input dimensionality")
         return None
 
-    if kc >= DB.shape[0]:
-        print("default k0 does not work (more inital cluster centers than data points). specify different k0")
+    if kc <= k or kc >= DB.shape[0]:
+        print(f"default k0 does not work. specify different k0. default k0 = {kc}, but conflict with k = {k} or n = {n}")
         return None
 
     if k >= DB.shape[0]:
         print("k is larger or equal n but should be k << n")
         return None
 
-    seeds = seeding_strategy.kmeanspp(DB, k)
+    seeds = seeding_strategy.kmeanspp(DB, kc)
     vectors = [np.matrix(np.eye(lc))]*kc
 
     beta = exp((-log(lc/l)*log(1/alpha))/log(kc/k))
@@ -94,7 +94,7 @@ def merge(seeds, clusters, k_new, l_new):
         merged_clusters.append((a[0], b[0], centroid, energy))
 
     while len(seeds) > k_new:
-        i_, j_, centroid, energy = min(merged_clusters, key=lambda t: t[1][3])
+        i_, j_, centroid, energy = min(merged_clusters, key=lambda t: t[3])
 
         seeds[i_] = centroid
         clusters[i_] += clusters[j_]
