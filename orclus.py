@@ -1,19 +1,13 @@
 #!/usr/bin/env python3
 
-from math import exp, log
 import numpy as np
 import numpy.linalg as linalg
-
-from utils import arff_to_ndarray
 import sys
-from sys import exit
-
 import itertools
-
-from pprint import pprint
 import seeding_strategy
-
 import logging
+from math import exp, log
+
 
 logging.basicConfig(stream=sys.stderr, level=logging.NOTSET) # set to warning, error or critical to silence
 
@@ -133,15 +127,3 @@ def predict(DB, seeds, vectors):
         clustering.append(np.argmin(dist))
 
     return clustering
-
-if __name__ == '__main__':
-    data, y = arff_to_ndarray("diabetes.arff")
-    clusters, seeds, vectors = orclus(data, 2, 3)
-
-    print("")
-    print("="*10)
-    print("no. of clusters:", len(clusters))
-    print("\nvector sets:")
-    pprint(vectors)
-
-    print("\nprediction vector:", predict(np.matrix(data), seeds, vectors)[0:20], '...')
