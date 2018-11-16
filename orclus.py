@@ -134,13 +134,14 @@ def predict(DB, seeds, vectors):
 
     return clustering
 
-data, y = arff_to_ndarray("diabetes.arff")
-clusters, seeds, vectors = orclus(np.matrix(data), 2, 3)
+if __name__ == '__main__':
+    data, y = arff_to_ndarray("diabetes.arff")
+    clusters, seeds, vectors = orclus(np.matrix(data), 2, 3)
 
-print("")
-print("="*10)
-print("no. of clusters:", len(clusters))
-print("\nvector sets:")
-pprint(vectors)
+    print("")
+    print("="*10)
+    print("no. of clusters:", len(clusters))
+    print("\nvector sets:")
+    pprint(vectors)
 
-print("\nprediction vector:", predict(np.matrix(data), seeds, vectors)[0:20], '...')
+    print("\nprediction vector:", predict(np.matrix(data), seeds, vectors)[0:20], '...')
