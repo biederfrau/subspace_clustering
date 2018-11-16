@@ -16,6 +16,8 @@
 \usepackage{fancyhdr}
 \usepackage{blindtext}
 
+\usepackage{subcaption}
+
 \pagestyle{fancy}
 \fancyhf{}
 \rhead{Group 2}
@@ -109,8 +111,58 @@ suggests that the LAPACK routines utilized in NumPy's implementation of
 in \texttt{sklearn.decomposition.PCA}.  However, this probably would make no
 practical difference whatsoever.
 
-The initial seeds are distributed using the kmeans\texttt{++} initialization strategy.
+The initial seeds are distributed using the kmeans\texttt{++} initialization strategy,
+although we have also implemented a completely random initalization strategy.
+If the initial seed count is chosen to be high enough, this strategy actually
+seems to be beneficial, as it returns good partitions and is also faster.
 
 \section{Evaluation}
+
+We will be comparing ourselves to the ELKI implementation on 4 synthetic datasets
+using the NMI as scoring method. The datasets were generated using ELKI's data generator.
+We used flat Gaussian distributions as correlation clusters and added noise points
+to disturb the algorithm.
+
+\subsection{Simple dataset}
+
+As a simple first dataset we feed a 2-dimensional data set containing 3 clusters that are very clearly
+separated, one of which is a bit fatter than the stereotypical correlation cluster, but which is
+axis-parallel. Figure~\ref{fig:test} shows the results obtained by our implementation (Figure~\ref{fig:test-ours})
+and the result obtained by the implementation contained in ELKI. They are identical---notably misclassifying one
+single point which would belong to the fat axis-parallel cluster.
+
+\begin{figure}[tb]
+    \centering
+    \begin{subfigure}[t]{0.5\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{img/test_ours}
+        \caption{Our implementation}
+        \label{fig:test-ours}
+    \end{subfigure}%
+    \begin{subfigure}[t]{0.5\textwidth}
+        \centering
+        \includegraphics[width=2\textwidth]{img/test_elki}
+        \caption{ELKI's implementation}
+    \end{subfigure}
+
+    \caption{Bla}
+    \label{fig:test}
+\end{figure}
+
+\subsection{Simple dataset with added noise}
+
+% coming soon
+
+\subsection{Clusters that are noise in some subspaces}
+
+% coming soon
+
+\subsection{Clusters with different rotations in some subspaces}
+
+% coming soon
+
+\subsection{Summary}
+
+% also coming soon
 
 \end{document}
