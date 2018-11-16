@@ -8,7 +8,6 @@ import seeding_strategy
 import logging
 from math import exp, log
 
-
 logging.basicConfig(stream=sys.stderr, level=logging.NOTSET) # set to warning, error or critical to silence
 
 def pdist(x, y, vectors):
@@ -58,6 +57,8 @@ def orclus(DB, k, l, alpha=0.5, k0=None):
     return (clusters, seeds, vectors)
 
 def find_vectors(cluster, q):
+    if len(cluster) <= 1: return np.eye(q) # cannot decompose
+
     _, v = linalg.eigh(np.cov(np.vstack(cluster), rowvar=False))
     return v[:, 0:q]
 
