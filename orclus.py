@@ -27,8 +27,8 @@ def orclus(DB, k, l, alpha=0.5, k0=None):
     kc = 5*k if k0 is None else k0
     lc = DB.shape[1]
 
-    if l >= lc:
-        print("target dimensionality must be lower than input dimensionality")
+    if l > lc:
+        print("target dimensionality must be lower-equal than input dimensionality")
         return None
 
     if kc >= DB.shape[0]:
