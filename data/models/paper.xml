@@ -1,0 +1,22 @@
+<!DOCTYPE dataset PUBLIC "GeneratorByModel.dtd" "GeneratorByModel.dtd">
+<dataset random-seed="1" test-model="1">
+  <cluster name="cluster1" size="290">
+    <normal mean="4" stddev="0.7" />
+    <normal mean="7" stddev="3.5" />
+
+    <normal mean="7" stddev="7" />
+    <normal mean="7" stddev="5" />
+
+    <rotate axis1="1" axis2="2" angle="30"/>
+  </cluster>
+
+  <cluster name="cluster2" size="100">
+    <normal mean="5" stddev="0.5" />
+    <normal mean="23" stddev="3.5" />
+
+    <normal mean="7" stddev="7" />
+    <normal mean="7" stddev="5" />
+
+    <rotate axis1="1" axis2="2" angle="-40"/>
+  </cluster>
+</dataset>
