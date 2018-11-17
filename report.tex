@@ -86,7 +86,9 @@ next step, the eigenvectors associated with the smallest spread are computed on
 a per cluster basis---the rationale behind this is that those vectors define a
 subspace in which the points cluster well, i.e. have a low contribution to the
 overall cluster energy. The cardinality of this vector set dictates the dimensionality
-of the subspace to which the points are projected.
+of the subspace to which the points are projected. The points are then projected
+into the subspace defined by these vectors, which modifies their distances to
+each other.
 
 To reduce the amounts of clusters---the algorithm starts with more seeds than
 requested by the user, we've chosen to start with 5 times as many as the
@@ -101,6 +103,9 @@ These three steps are repeated until the desired dimensionality and number of
 clusters are reached. After a final assignment step the clustering is returned.
 
 \subsection{Pseudocode}
+
+The core algorithm is defined in Algorithm~\ref{alg:main}. Algorithms~\ref{alg:ass},~\ref{alg:find}~and~\ref{alg:merge}
+cover the assignment, subspace determination, and merging of clusters.
 
 %%%%%%%%%% ORCLUS
 \begin{algorithm}
@@ -134,6 +139,8 @@ clusters are reached. After a final assignment step the clustering is returned.
     \State \Return $(C_1...C_{k_c})$;
 \EndFunction
 \end{algorithmic}
+\caption{ORCLUS}
+\label{alg:main}
 \end{algorithm}
 
 %%%%%%%%%% ASSIGN
@@ -157,6 +164,8 @@ clusters are reached. After a final assignment step the clustering is returned.
    \Return $(s_1...s_{k_c},$ $C_1...C_{k_c})$
 \EndFunction
 \end{algorithmic}
+\caption{Assignment step}
+\label{alg:ass}
 \end{algorithm}
 
 %%%%%%%%%% FINDVECTORS
@@ -169,6 +178,8 @@ clusters are reached. After a final assignment step the clustering is returned.
     \State \Return $(\varepsilon)$
 \EndFunction
 \end{algorithmic}
+\caption{Procedure for determining cluster subspaces}
+\label{alg:find}
 \end{algorithm}
 
 %%%%%%%%%% MERGE
@@ -205,6 +216,8 @@ clusters are reached. After a final assignment step the clustering is returned.
     \Return $(s_1...s_{k_{new}}$, $C_1...C_{k_{new}}$, $\varepsilon_1...\varepsilon_{k_{new}})$
 \EndFunction
 \end{algorithmic}
+\caption{Procedure for merging clusters}
+\label{alg:merge}
 \end{algorithm}
 
 \subsection{Implementation}
