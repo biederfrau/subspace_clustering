@@ -99,7 +99,8 @@ careful to update all relevant data structures after each merge.
 These three steps are repeated until the desired dimensionality and number of
 clusters are reached. After a final assignment step the clustering is returned.
 
-\subsubsection{Pseudocode}
+\subsection{Pseudocode}
+
 %%%%%%%%%% ORCLUS
 \begin{algorithm}
 \begin{algorithmic}
@@ -224,6 +225,8 @@ although we have also implemented a completely random initalization strategy.
 If the initial seed count is chosen to be high enough, this strategy actually
 seems to be beneficial, as it returns good partitions and is also faster.
 
+
+\pagebreak
 \section{Evaluation}
 
 We will be comparing ourselves to the ELKI implementation on 4 synthetic datasets
@@ -245,31 +248,14 @@ best NMI score.
 
 As a simple first dataset we generate a 2-dimensional data set containing 3 clusters that are very clearly
 separated, one of which is a bit fatter than the stereotypical correlation cluster, and which is
-axis-parallel. Figure~\ref{fig:test} shows the results obtained by our implementation (Figure~\ref{fig:test-ours})
+axis-parallel. Figure~\ref{fig:test} shows the results obtained by our implementation
 and the result obtained by the implementation contained in ELKI. They are identical---notably misclassifying one
 single point which would belong to the fat axis-parallel cluster.
 
 \begin{figure}[tb]
     \centering
-    \begin{subfigure}[t]{0.33\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{img/test_ours}
-        \caption{Our implementation TODO}
-        \label{fig:test-ours}
-    \end{subfigure}%
-    \begin{subfigure}[t]{0.33\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{img/test_ours}
-        \caption{ELKI's implementation TODO}
-    \end{subfigure}%
-    \begin{subfigure}[t]{0.33\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{img/test}
-        \caption{Ground truth}
-        \label{fig:true}
-    \end{subfigure}%
-
-    \caption{Bla}
+    \includegraphics[width=\textwidth]{img/test_cmp}
+    \caption{Results on the \texttt{test} dataset}
     \label{fig:test}
 \end{figure}
 
@@ -281,33 +267,14 @@ It should perform much worse, since ORCLUS has no notion of noise by default
 detection, this does not seem to be implemented in ELKI), but it is interesting
 to see how the two implementation compare on a problematic dataset.
 
-Figure~\ref{fig:test_noisy_true} shows the ground truth for this dataset, while
-Figures~\ref{fig:test_noisy_ours}~and~\ref{fig:test_noisy_elki} show the results
-of our implementation and ELKI's implementation, respectively.
+Figure~\ref{fig:noisy-cmp} show the results
+of our implementation and ELKI's implementation as well as the ground truth.
 
 \begin{figure}[tb]
     \centering
-    \begin{subfigure}[t]{0.33\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{img/test_noisy_ours}
-        \caption{Our implementation TODO}
-        \label{fig:test_noisy_ours}
-    \end{subfigure}%
-    \begin{subfigure}[t]{0.33\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{img/test_ours}
-        \caption{ELKI's implementation TODO}
-        \label{fig:test_noisy_elki}
-    \end{subfigure}%
-    \begin{subfigure}[t]{0.33\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{img/test_noisy}
-        \caption{Ground truth}
-        \label{fig:test_noisy_true}
-    \end{subfigure}%
-
-    \caption{Results obtained by running the algorithm vs. the ground truth}
-    \label{fig:test}
+    \includegraphics[width=\textwidth]{img/test_noisy_cmp}
+    \caption{Results for dataset \texttt{test\_noisy}}
+    \label{fig:noisy-cmp}
 \end{figure}
 
 \subsection{Clusters that are noise in some subspaces}
@@ -318,11 +285,24 @@ clusters may reside---thus clusters in some subspaces are noise in others. We
 would thus expect the algorithm to struggle. Figure~\ref{fig:true_higher_dim} depicts
 the ground truth for this data set.
 
-\begin{figure}[tb]
+Figure~\ref{fig:higher_dim_res} shows the results for both implementations.
+Interestingly, our implementation manages to obtain clusterings that
+look tidier. However, the NMIs are pretty close, as the tidyness of
+the clustering does not match the actual structure in the data.
+
+\begin{figure}[p]
     \centering
-    \includegraphics[width=\textwidth]{img/higher_dimensional}
-    \caption{Ground truth}
-    \label{fig:true_higher_dim}
+    \begin{subfigure}{\textwidth}
+        \includegraphics[width=\textwidth]{img/higher_dimensional}
+        \caption{Ground truth}
+        \label{fig:true_higher_dim}
+    \end{subfigure}%
+    \\
+    \begin{subfigure}{\textwidth}
+        \includegraphics[width=\textwidth]{img/higher_dimensional_cmp}
+        \caption{Results}
+        \label{fig:higher_dim_res}
+    \end{subfigure}
 \end{figure}
 
 \subsection{Clusters with different rotations in some subspaces}
@@ -333,11 +313,25 @@ and Gaussian noise in the last two dimensions. We expect the algorithm to
 correctly focus on the leading two dimensions and discard the other two.
 Figure~\ref{fig:true_paper} shows this data set with the correct labels.
 
-\begin{figure}[tb]
+Figure~\ref{fig:paper_results} shows the results. As this is a very simple
+data set, we are a bit worried that ELKI does not manage to find this
+clustering in every try---out of 5 runs, only one run managed to reach a
+NMI of 1. One run was even only able to reach a NMI of 0.005, which is
+catastrophically small.
+
+\begin{figure}[p]
     \centering
-    \includegraphics[width=\textwidth]{img/paper}
-    \caption{Ground truth}
-    \label{fig:true_paper}
+    \begin{subfigure}{\textwidth}
+        \includegraphics[width=\textwidth]{img/paper}
+        \caption{Ground truth}
+        \label{fig:true_paper}
+    \end{subfigure}%
+    \\
+    \begin{subfigure}{\textwidth}
+        \includegraphics[width=\textwidth]{img/paper_cmp}
+        \caption{Results}
+        \label{fig:paper_results}
+    \end{subfigure}
 \end{figure}
 
 \subsection{Summary}
@@ -360,6 +354,13 @@ maximum and average over the 5 runs are shown split between our implementation
   \label{tab:overview}
 \end{table}
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{img/boxplt}
+    \caption{Boxplot illustrating stability}
+    \label{fig:box}
+\end{figure}
+
 Interestingly, our implementation appears to have a slight advantage over
 ELKI's.  Notice especially the discrepancy with dataset \texttt{paper}, where
 ELKI's implementation appears extremely unstable, while ours uncovers the
@@ -373,13 +374,8 @@ decomposition is implemented differently, or we are just lucky. We also want to
 note that we use fewer initial seeds than ELKI.
 
 Figure~\ref{fig:box} shows a boxplot of the obtained NMI scores. A more stable implementation
-would have a shorter box, i.e. less variance in the results.
-
-\begin{figure}[t!p]
-    \centering
-    \includegraphics[width=\textwidth]{img/boxplt}
-    \caption{Boxplot illustrating stability}
-    \label{fig:box}
-\end{figure}
+would have a shorter box, i.e. less variance in the results. Our implementation appears
+much more stable on the given datasets, save for the \texttt{higher\_dimensional} dataset
+which is difficult to cluster.
 
 \end{document}
