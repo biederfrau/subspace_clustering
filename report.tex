@@ -15,6 +15,9 @@
 \usepackage{color}
 \usepackage{fancyhdr}
 \usepackage{blindtext}
+\usepackage[noend]{algpseudocode}
+\usepackage{algorithm}
+\algnewcommand{\LineComment}[1]{\State \(\triangleright\) #1}
 
 \usepackage{subcaption}
 \usepackage{booktabs}
@@ -96,7 +99,110 @@ careful to update all relevant data structures after each merge.
 These three steps are repeated until the desired dimensionality and number of
 clusters are reached. After a final assignment step the clustering is returned.
 
-%% TODO: pseudocode
+\subsubsection{Pseudocode}
+%%%%%%%%%% ORCLUS
+\begin{algorithm}
+\begin{algorithmic}
+\Function{orclus}{\textit{Database: $DB$, \# of Clusters: $k$, \# of Dimensions: $l$}}
+    \LineComment{$C_i \Rightarrow$ current cluster $i$}
+    \LineComment{$\varepsilon_i \Rightarrow$ set of vectors defining subspace for cluster $C_i$}
+    \LineComment{$k_c \Rightarrow$ current \# of seeds}
+    \LineComment{$l_c \Rightarrow$ current dimensionality}
+    \LineComment{$S = \{s_1, s_2, ... s_{k_c}\} \Rightarrow$ current set of seeds}
+    \State $k_c = k_0;$ $l_c = d;$ \Comment{$k_0 \Rightarrow$ initial \# of seeds} \Comment{$d \Rightarrow$ dimension of the data}
+    \State $S =$ \Call{kmeanspp}{$DB$, $k_c$}; \Comment{choose initial seeds with K-means++}
+    \ForAll{$i \in \{1 ... k_c\}$}
+        $\varepsilon_i = D$; \Comment{initially, $\varepsilon_i$ is the original axis-system}
+    \EndFor
+    \State $\alpha = 0.5;$ $\beta = e^{-\log (l_c/l)\log (1/\alpha) / \log (k_c/k)};$
+    \While{$k_c > k$}
+        \LineComment{partition the database by assigning each object to its closest seed}
+        \State $s_1 ... s_{k_c},$ $C_1...C_{k_c} =$ \Call{assign}{$DB$, $S$, $\varepsilon$};
+        \LineComment{determine current subspace associated with each cluster}
+        \ForAll{$i \in \{1...k_c\}$}
+            $\varepsilon_i =$ \Call{findVectors}{$C_i$, $l_c$};
+        \EndFor
+        \LineComment{reduce number of seeds and dimensionality associated with each seed}
+        \State $k_{new} =$ \Call{max}{$k$, $k_c * \alpha$}; $l_{new} =$ \Call{max}{$l$, $l_c * \beta$};
+        \State $s_1...s_{k_{new}},$ $C_1...C_{k_{new}},$ $\varepsilon_1...\varepsilon_{k_{new}} =$ \Call{merge}{$C_1...C_{k_c}$, $k_{new}$, $l_{new}$};
+        \State $k_c = k_{new};$ $l_c = l_{new};$
+    \EndWhile
+    \State $s_1...s_{k_c},$ $C_1...C_{k_c} =$ \Call{assign}{$DB$, $S$, $\varepsilon$};
+    \State \Return $(C_1...C_{k_c})$;
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+
+%%%%%%%%%% ASSIGN
+\begin{algorithm}
+\begin{algorithmic}
+\Function{assign}{$DB$, $s_1...s_{k_c}$, $\varepsilon_1...\varepsilon_{k_c}$}
+   \ForAll{$i \in \{1...k_c\}$}
+        $C_i = \emptyset$;
+   \EndFor
+   \ForAll{$p \in DB$}
+       \LineComment{distance of point $p$ to $s_i$ in subspace $\varepsilon_i$}
+        \ForAll{$i \in \{1...k_c\}$}
+            \Call{pdist}{$p$, $s_i$, $\varepsilon_i$};
+        \EndFor
+        Determine the seed $s_i$ with the least value of \Call{pdist}{$p$, $s_i$, $\varepsilon_i$} and add $p$ to $C_i$;
+   \EndFor
+   \ForAll{$i \in \{1 ... k_c\}$}
+        $s_i =$ \Call{$\bar{X}$}{$C_i$};
+        \Comment{set $s_i$ to new cluster center}
+   \EndFor
+   \Return $(s_1...s_{k_c},$ $C_1...C_{k_c})$
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+
+%%%%%%%%%% FINDVECTORS
+\begin{algorithm}
+\begin{algorithmic}
+\Function{findVectors}{\textit{Cluster of Points: $C$, Dimensionality of Projection: $q$}}
+    \State Determine the $d*d$ covariance matrix $M$ for $C$;
+    \State Determine the eigenvectors of matrix $M$;
+    \State $\varepsilon =$ Set of eigenvectors corresponding  to smallest $q$ eigenvalues;
+    \State \Return $(\varepsilon)$
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+
+%%%%%%%%%% MERGE
+\begin{algorithm}
+\begin{algorithmic}
+\Function{merge}{$C_1...C_{k_c}$, $k_{new}$, $l_{new}$}
+    \ForAll{$i,j \in \{1...k_c\}, i < j$}
+        \LineComment{define $\varepsilon'_{ij}$ by eigenvectors for $l_{new}$ smallest eigenvalues}
+        \State $\varepsilon'_{ij} =$ \Call{findVectors}{$C_i \cup C_j$, $l_{new}$};
+        \State $s'_{ij} =$ \Call{$\bar{X}$}{$C_i \cup C_j$};
+        \Comment{Centroid of $C_i \cup C_j$}
+        \LineComment{compute projected energy of $C_i \cup C_j$ in subspace $\varepsilon'_{ij}$}
+        \State $r_{ij} =$ \Call{clusterEnergy}{$C_i \cup C_j$, $\varepsilon'_{ij}$};
+    \EndFor
+    \While{$k_c > k_{new}$}
+        \ForAll{$i,j \in \{1...k_c\}, i < j$}
+            Find smallest value of $r_{i'j'}$;
+        \EndFor
+        \LineComment{merge the corresponding clusters $C_{i'}$ and $C_{j'}$}
+        \State $s_{i'} = s'_{i'j'}$; $C_{i'} = C_{i'} \cup C_{j'}$; $\varepsilon_{i'} = \varepsilon'_{i'j'}$;
+        \State Discard $s_{j'}$ and $C_{j'}$;
+        \State Renumber the seeds/clusters indexed larger than $j'$ by subtracting 1;
+        \ForAll{$i,j \geq j'$}
+            Renumber the values of $s'_{ij}$, $\varepsilon_{ij}$, $r_{ij}$ correspondingly;
+        \EndFor
+        \LineComment{recompute $r_{i'j}$ pairwise for new cluster $i'$}
+        \ForAll{$j \neq i' \in \{1...k_c - 1\}$}
+            \State $\varepsilon'_{i'j} =$ \Call{findVectors}{$C_{i'} \cup C_j$, $l_{new}$};
+            \State $s'_{i'j} =$ \Call{$\bar{X}$}{$C_{i'} \cup C_j$};
+            \State $r_{i'j} =$ \Call{clusterEnergy}{$C_{i'} \cup C_j$, $\varepsilon'_{i'j}$};
+        \EndFor
+        $k_c = k_c - 1$;
+    \EndWhile
+    \Return $(s_1...s_{k_{new}}$, $C_1...C_{k_{new}}$, $\varepsilon_1...\varepsilon_{k_{new}})$
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
 
 \subsection{Implementation}
 
