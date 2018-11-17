@@ -242,8 +242,8 @@ best NMI score.
 
 \subsection{Simple dataset}
 
-As a simple first dataset we feed a 2-dimensional data set containing 3 clusters that are very clearly
-separated, one of which is a bit fatter than the stereotypical correlation cluster, but which is
+As a simple first dataset we generate a 2-dimensional data set containing 3 clusters that are very clearly
+separated, one of which is a bit fatter than the stereotypical correlation cluster, and which is
 axis-parallel. Figure~\ref{fig:test} shows the results obtained by our implementation (Figure~\ref{fig:test-ours})
 and the result obtained by the implementation contained in ELKI. They are identical---notably misclassifying one
 single point which would belong to the fat axis-parallel cluster.
@@ -345,6 +345,20 @@ Table~\ref{tab:overview} shows the results of our evaluation. The minimum,
 maximum and average over the 5 runs are shown split between our implementation
 (DM) and the implementation available in ELKI.
 
+\begin{table}[bt]\centering
+  \begin{tabular}{lrrrcrrr}\toprule
+     & \multicolumn{3}{c}{DM} & \phantom{abc} & \multicolumn{3}{c}{ELKI}\\
+    dataset & min & max & avg & & min & max & avg\\ \midrule
+    test & 0.987 & 0.987 & \textbf{0.987} & & 0.537 & 0.987 & 0.811\\
+    test noisy & 0.536 & 0.66 & \emph{0.634} & & 0.537 & 0.659 & 0.634\\
+    higher dimensional & 0.271 & 0.323 & \textbf{0.297} & & 0.188 & 0.356 & 0.258\\
+    paper & 1.0 & 1.0 & \textbf{1.0} & & 0.005 & 1.0 & 0.559\\
+  \bottomrule
+  \end{tabular}
+  \caption{Overview of results}
+  \label{tab:overview}
+\end{table}
+
 Interestingly, our implementation appears to have a slight advantage over
 ELKI's.  Notice especially the discrepancy with dataset \texttt{paper}, where
 ELKI's implementation appears extremely unstable, while ours uncovers the
@@ -360,21 +374,7 @@ note that we use fewer initial seeds than ELKI.
 Figure~\ref{fig:box} shows a boxplot of the obtained NMI scores. A more stable implementation
 would have a shorter box, i.e. less variance in the results.
 
-\begin{table}[]\centering
-  \begin{tabular}{lrrrcrrr}\toprule
-     & \multicolumn{3}{c}{DM} & \phantom{abc} & \multicolumn{3}{c}{ELKI}\\
-    dataset & min & max & avg & & min & max & avg\\ \midrule
-    test & 0.987 & 0.987 & \textbf{0.987} & & 0.537 & 0.987 & 0.811\\
-    test noisy & 0.536 & 0.66 & \emph{0.634} & & 0.537 & 0.659 & 0.634\\
-    higher dimensional & 0.271 & 0.323 & \textbf{0.297} & & 0.188 & 0.356 & 0.258\\
-    paper & 1.0 & 1.0 & \textbf{1.0} & & 0.005 & 1.0 & 0.559\\
-  \bottomrule
-  \end{tabular}
-  \caption{Overview of results}
-  \label{tab:overview}
-\end{table}
-
-\begin{figure}
+\begin{figure}[t!p]
     \centering
     \includegraphics[width=\textwidth]{img/boxplt}
     \caption{Boxplot illustrating stability}
