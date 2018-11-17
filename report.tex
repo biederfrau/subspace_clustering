@@ -17,6 +17,7 @@
 \usepackage{blindtext}
 
 \usepackage{subcaption}
+\usepackage{booktabs}
 
 \pagestyle{fancy}
 \fancyhf{}
@@ -123,6 +124,16 @@ using the NMI as scoring method. The datasets were generated using ELKI's data g
 We used flat Gaussian distributions as correlation clusters and added noise points
 to disturb the algorithm.
 
+\subsection{Methodology}
+
+The evaluation should be fully reproducible. File \texttt{eval.sh} contains the calls made to our
+test scripts and ELKI. \texttt{summary.rb} is a Ruby script which processes the results, outputs
+an overview table and also generates a \texttt{gnuplot}-ready plot file for plotting a boxplot of
+the results.
+
+We execute the test runs 5 times and note their resulting NMIs as well as the clusterings with the
+best NMI score.
+
 \subsection{Simple dataset}
 
 As a simple first dataset we feed a 2-dimensional data set containing 3 clusters that are very clearly
@@ -141,7 +152,7 @@ single point which would belong to the fat axis-parallel cluster.
     \end{subfigure}%
     \begin{subfigure}[t]{0.5\textwidth}
         \centering
-        \includegraphics[width=2\textwidth]{img/test_elki}
+        \includegraphics[width=\textwidth]{img/test_elki}
         \caption{ELKI's implementation}
     \end{subfigure}
 
@@ -151,18 +162,72 @@ single point which would belong to the fat axis-parallel cluster.
 
 \subsection{Simple dataset with added noise}
 
+We want to torment ORCLUS by adding noise to the previous trivial dataset.
+It should perform much worse, since ORCLUS has no notion of noise by default
+(and, although the authors recommend a simple scheme for implementing outlier
+detection, this does not seem to be implemented in ELKI), but it is interesting
+to see how the two implementation compare on a problematic dataset.
+
 % coming soon
 
 \subsection{Clusters that are noise in some subspaces}
+
+It seems like a common situation in real-world data that clusters are present
+in some subspaces, but are very dispersed in other subspaces, where other
+clusters may reside---thus clusters in some subspaces are noise in others. We
+would thus expect the algorithm to struggle.
 
 % coming soon
 
 \subsection{Clusters with different rotations in some subspaces}
 
+The final dataset is somewhat based on the example of projected clusters
+in the paper. This dataset has two rotated clusters in the first two dimensions,
+and Gaussian noise in the last two dimensions. We expect the algorithm to
+correctly focus on the leading two dimensions and discard the other two.
+
 % coming soon
 
 \subsection{Summary}
 
-% also coming soon
+Table~\ref{tab:overview} shows the results of our evaluation. The minimum,
+maximum and average over the 5 runs are shown split between our implementation
+(DM) and the implementation available in ELKI.
+
+Interestingly, our implementation appears to have a slight advantage over
+ELKI's.  Notice especially the discrepancy with dataset \texttt{paper}, where
+ELKI's implementation appears extremely unstable, while ours uncovers the
+cluster structure perfectly without fail. The biggest difference in our
+implementation is that we use a different initialization strategy, namely
+kmeans\texttt{++}---this might result in our algorithm having an easier time
+converging to a good minimum since the cluster centres are already
+well-separated. However, our implementation performed better even when using a
+random seed picking strategy---we suspect that perhaps the eigenvalue
+decomposition is implemented differently, or we are just lucky. We also want to
+note that we use fewer initial seeds than ELKI.
+
+Figure~\ref{fig:box} shows a boxplot of the obtained NMI scores. A more stable implementation
+would have a shorter box, i.e. less variance in the results.
+
+\begin{table}[]\centering
+  \begin{tabular}{lrrrcrrr}\toprule
+     & \multicolumn{3}{c}{DM} & \phantom{abc} & \multicolumn{3}{c}{ELKI}\\
+    dataset & min & max & avg & & min & max & avg\\ \midrule
+    test & 0.987 & 0.987 & \textbf{0.987} & & 0.537 & 0.987 & 0.811\\
+    test noisy & 0.536 & 0.66 & \emph{0.634} & & 0.537 & 0.659 & 0.634\\
+    higher dimensional & 0.271 & 0.323 & \textbf{0.297} & & 0.188 & 0.356 & 0.258\\
+    paper & 1.0 & 1.0 & \textbf{1.0} & & 0.005 & 1.0 & 0.559\\
+  \bottomrule
+  \end{tabular}
+  \caption{Overview of results}
+  \label{tab:overview}
+\end{table}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{img/boxplt}
+    \caption{Boxplot illustrating stability}
+    \label{fig:box}
+\end{figure}
 
 \end{document}

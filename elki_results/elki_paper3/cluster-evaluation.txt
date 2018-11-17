@@ -1,0 +1,25 @@
+# Pair counting measures
+Jaccard 1.0
+F1-Measure 1.0
+Precision 1.0
+Recall 1.0
+Rand 1.0
+ARI 1.0
+FowlkesMallows 1.0
+# Entropy based measures
+NMI Joint 1.0
+NMI Sqrt 1.0
+# BCubed-based measures
+F1-Measure 1.0
+Recall 1.0
+Precision 1.0
+# Set-Matching-based measures
+F1-Measure 1.0
+Purity 1.0
+Inverse Purity 1.0
+# Editing-distance measures
+F1-Measure 0.9948717948717949
+Precision 0.9948717948717949
+Recall 0.9948717948717949
+# Gini measures
+Mean +-0.0000 1.0
