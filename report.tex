@@ -295,19 +295,36 @@ Interestingly, our implementation manages to obtain clusterings that
 look tidier. However, the NMIs are pretty close, as the tidiness of
 the clustering does not match the actual structure in the data.
 
+It appears as if the two implementations pick very different subspaces.
+ELKI's version seems to use a rather complex projection, while our algorithm
+might as well be operating in the original basis.
+
 \begin{figure}[p]
     \centering
-    \begin{subfigure}{\textwidth}
+    \begin{subfigure}{0.6\textwidth}
         \includegraphics[width=\textwidth]{img/higher_dimensional}
-        \caption{Ground truth}
+        \caption{Ground truth for \texttt{higher\_dimensional}}
         \label{fig:true_higher_dim}
     \end{subfigure}%
     \\
-    \begin{subfigure}{\textwidth}
+    \begin{subfigure}{0.6\textwidth}
         \includegraphics[width=\textwidth]{img/higher_dimensional_cmp}
-        \caption{Results}
+        \caption{Results of ELKI vs. our implementation}
         \label{fig:higher_dim_res}
+    \end{subfigure}%
+    \\
+    \begin{subfigure}{0.6\textwidth}
+        \includegraphics[width=\textwidth]{img/paper}
+        \caption{Ground truth for \texttt{paper}}
+        \label{fig:true_paper}
+    \end{subfigure}%
+    \\
+    \begin{subfigure}{0.6\textwidth}
+        \includegraphics[width=\textwidth]{img/paper_cmp}
+        \caption{Results of ELKI vs. our implementation}
+        \label{fig:paper_results}
     \end{subfigure}
+    \caption{Results on the \texttt{higher\_dimensional} and \texttt{paper} datasets compared to their ground truth}
 \end{figure}
 
 \subsection{Clusters with different rotations in some subspaces}
@@ -318,28 +335,19 @@ and Gaussian noise in the last two dimensions. We expect the algorithm to
 correctly focus on the leading two dimensions and discard the other two.
 Figure~\ref{fig:true_paper} shows this data set with the correct labels.
 
+Note that this data set has an axis-parallel representation when picking the
+first and third dimension (i.e. a noise dimension). This subspace seems to be
+preferred by ELKI's implementation, as misclassified points are often at the
+border of the correct cluster in this subspace. It could be that these outliers
+(that are somehow assigned to the wrong cluster, e.g. by badly placed seeds)
+destroy the PCA result, causing the algorithm to fall into a local minimum it
+cannot escape from.
+
 Figure~\ref{fig:paper_results} shows the results. As this is a very simple
 data set, we are a bit worried that ELKI does not manage to find this
 clustering in every try---out of 5 runs, only one run managed to reach a
 NMI of 1. One run was even only able to reach a NMI of 0.005, which is
 catastrophically small.
-
-\begin{figure}[p]
-    \centering
-    \begin{subfigure}{\textwidth}
-        \includegraphics[width=\textwidth]{img/paper}
-        \caption{Ground truth}
-        \label{fig:true_paper}
-    \end{subfigure}%
-    \\
-    \begin{subfigure}{\textwidth}
-        \includegraphics[width=\textwidth]{img/paper_cmp}
-        \caption{Results}
-        \label{fig:paper_results}
-    \end{subfigure}
-\end{figure}
-
-\vfill
 
 \subsection{Summary}
 
@@ -347,7 +355,7 @@ Table~\ref{tab:overview} shows the results of our evaluation. The minimum,
 maximum and average over the 5 runs are shown split between our implementation
 (DM) and the implementation available in ELKI.
 
-\begin{table}[bt]\centering
+\begin{table}[btp]\centering
   \begin{tabular}{lrrrcrrr}\toprule
      & \multicolumn{3}{c}{DM} & \phantom{abc} & \multicolumn{3}{c}{ELKI}\\
     dataset & min & max & avg & & min & max & avg\\ \midrule
@@ -357,11 +365,11 @@ maximum and average over the 5 runs are shown split between our implementation
     paper & 1.0 & 1.0 & \textbf{1.0} & & 0.005 & 1.0 & 0.559\\
   \bottomrule
   \end{tabular}
-  \caption{Overview of results}
+  \caption{Summary of NMI scores}
   \label{tab:overview}
 \end{table}
 
-\begin{figure}[t]
+\begin{figure}[t!]
     \centering
     \includegraphics[width=\textwidth]{img/boxplt}
     \caption{Boxplot illustrating stability}
