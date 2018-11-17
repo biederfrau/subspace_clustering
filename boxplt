@@ -12,7 +12,7 @@ set ylabel 'NMI'
 set xlabel 'data set'
 set terminal pdf
 set output 'boxplt.pdf'
-set key right bottom
+set key left bottom
 
 set title 'NMI distributions' noenhanced
 plot 'test_summary.dat' using (1):1 lc 'red' title 'ours','' using (1.2):2 lt 2 title 'ELKI', \

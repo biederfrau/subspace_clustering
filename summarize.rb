@@ -39,7 +39,7 @@ File.open('boxplt', 'w+') do |f|
   f.write "set xlabel 'data set'\n"
   f.write "set terminal pdf\n"
   f.write "set output 'boxplt.pdf'\n"
-  f.write "set key right bottom\n\n"
+  f.write "set key left bottom\n\n"
 
   f.write "set title 'NMI distributions' noenhanced\n"
 

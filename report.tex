@@ -250,17 +250,23 @@ single point which would belong to the fat axis-parallel cluster.
 
 \begin{figure}[tb]
     \centering
-    \begin{subfigure}[t]{0.5\textwidth}
+    \begin{subfigure}[t]{0.33\textwidth}
         \centering
         \includegraphics[width=\textwidth]{img/test_ours}
-        \caption{Our implementation}
+        \caption{Our implementation TODO}
         \label{fig:test-ours}
     \end{subfigure}%
-    \begin{subfigure}[t]{0.5\textwidth}
+    \begin{subfigure}[t]{0.33\textwidth}
         \centering
-        \includegraphics[width=\textwidth]{img/test_elki}
-        \caption{ELKI's implementation}
-    \end{subfigure}
+        \includegraphics[width=\textwidth]{img/test_ours}
+        \caption{ELKI's implementation TODO}
+    \end{subfigure}%
+    \begin{subfigure}[t]{0.33\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{img/test}
+        \caption{Ground truth}
+        \label{fig:true}
+    \end{subfigure}%
 
     \caption{Bla}
     \label{fig:test}
@@ -274,16 +280,49 @@ It should perform much worse, since ORCLUS has no notion of noise by default
 detection, this does not seem to be implemented in ELKI), but it is interesting
 to see how the two implementation compare on a problematic dataset.
 
-% coming soon
+Figure~\ref{fig:test_noisy_true} shows the ground truth for this dataset, while
+Figures~\ref{fig:test_noisy_ours}~and~\ref{fig:test_noisy_elki} show the results
+of our implementation and ELKI's implementation, respectively.
+
+\begin{figure}[tb]
+    \centering
+    \begin{subfigure}[t]{0.33\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{img/test_noisy_ours}
+        \caption{Our implementation TODO}
+        \label{fig:test_noisy_ours}
+    \end{subfigure}%
+    \begin{subfigure}[t]{0.33\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{img/test_ours}
+        \caption{ELKI's implementation TODO}
+        \label{fig:test_noisy_elki}
+    \end{subfigure}%
+    \begin{subfigure}[t]{0.33\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{img/test_noisy}
+        \caption{Ground truth}
+        \label{fig:test_noisy_true}
+    \end{subfigure}%
+
+    \caption{Results obtained by running the algorithm vs. the ground truth}
+    \label{fig:test}
+\end{figure}
 
 \subsection{Clusters that are noise in some subspaces}
 
 It seems like a common situation in real-world data that clusters are present
 in some subspaces, but are very dispersed in other subspaces, where other
 clusters may reside---thus clusters in some subspaces are noise in others. We
-would thus expect the algorithm to struggle.
+would thus expect the algorithm to struggle. Figure~\ref{fig:true_higher_dim} depicts
+the ground truth for this data set.
 
-% coming soon
+\begin{figure}[tb]
+    \centering
+    \includegraphics[width=\textwidth]{img/higher_dimensional}
+    \caption{Ground truth}
+    \label{fig:true_higher_dim}
+\end{figure}
 
 \subsection{Clusters with different rotations in some subspaces}
 
@@ -291,8 +330,14 @@ The final dataset is somewhat based on the example of projected clusters
 in the paper. This dataset has two rotated clusters in the first two dimensions,
 and Gaussian noise in the last two dimensions. We expect the algorithm to
 correctly focus on the leading two dimensions and discard the other two.
+Figure~\ref{fig:true_paper} shows this data set with the correct labels.
 
-% coming soon
+\begin{figure}[tb]
+    \centering
+    \includegraphics[width=\textwidth]{img/paper}
+    \caption{Ground truth}
+    \label{fig:true_paper}
+\end{figure}
 
 \subsection{Summary}
 
