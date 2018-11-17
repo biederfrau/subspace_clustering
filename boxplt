@@ -1,0 +1,21 @@
+set style fill solid 0.25 border -1
+set style fill solid 0.25 border -1
+set style boxplot outliers pointtype 7
+set style data boxplot
+set boxwidth  0.15
+set pointsize 0.5
+set border 2
+set xtics ("test" 1, "test noisy" 2, "higher dimensional" 3, "paper" 4) scale 0.0
+set xtics nomirror
+set ytics nomirror
+set ylabel 'NMI'
+set xlabel 'data set'
+set terminal pdf
+set output 'boxplt.pdf'
+set key right bottom
+
+set title 'NMI distributions' noenhanced
+plot 'test_summary.dat' using (1):1 lc 'red' title 'ours','' using (1.2):2 lt 2 title 'ELKI', \
+     'test_noisy_summary.dat' using (2):1 lc 'red' notitle, '' using (2.2):2 lt 2 notitle, \
+     'higher_dimensional_summary.dat' using (3):1 lc 'red' notitle, '' using (3.2):2 lt 2 notitle, \
+     'paper_summary.dat' using (4):1 lc 'red' notitle, '' using (4.2):2 lt 2 notitle'
