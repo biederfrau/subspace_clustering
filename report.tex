@@ -21,6 +21,7 @@
 
 \usepackage{subcaption}
 \usepackage{booktabs}
+\usepackage[htt]{hyphenat}
 
 \pagestyle{fancy}
 \fancyhf{}
@@ -64,14 +65,14 @@ which utilizes eigensystems to adapt the distance measure to non axis parallel
 correlation clusters.
 
 We picked this algorithm because the paper is easy to read and contains good
-pseudocode which is of utmost importance when trying to actually implement
+pseudo code which is of utmost importance when trying to actually implement
 the described algorithm.
 
 Furthermore, since $k$-means was the first clustering algorithm we studied, it will forever
 have a special Gaussian-shaped spot in our heart---which makes ORCLUS, as a
 spiritual successor, a natural choice.
 
-\subsection{Description and Pseudocode}
+\subsection{Description}
 
 The algorithm proceeds in rounds in which the dimensionality of the clusters
 and the number of clusters is gradually reduced. The rate at which this happens should
@@ -221,7 +222,7 @@ in \texttt{sklearn.decomposition.PCA}.  However, this probably would make no
 practical difference whatsoever.
 
 The initial seeds are distributed using the kmeans\texttt{++} initialization strategy,
-although we have also implemented a completely random initalization strategy.
+although we have also implemented a completely random initialization strategy.
 If the initial seed count is chosen to be high enough, this strategy actually
 seems to be beneficial, as it returns good partitions and is also faster.
 
@@ -241,8 +242,12 @@ test scripts and ELKI. \texttt{summary.rb} is a Ruby script which processes the 
 an overview table and also generates a \texttt{gnuplot}-ready plot file for plotting a boxplot of
 the results.
 
+The scripts \texttt{show\_data.py} can be used to view the datasets contained in \texttt{data/},
+\texttt{elki\_results\_to\_csv.py} consolidates the output of ELKI into one single \texttt{.csv}
+file which can be plotted and compared to our results using the \texttt{plot\_results.py} script.
+
 We execute the test runs 5 times and note their resulting NMIs as well as the clusterings with the
-best NMI score.
+best NMI score. We average using the arithmetic mean.
 
 \subsection{Simple dataset}
 
@@ -287,7 +292,7 @@ the ground truth for this data set.
 
 Figure~\ref{fig:higher_dim_res} shows the results for both implementations.
 Interestingly, our implementation manages to obtain clusterings that
-look tidier. However, the NMIs are pretty close, as the tidyness of
+look tidier. However, the NMIs are pretty close, as the tidiness of
 the clustering does not match the actual structure in the data.
 
 \begin{figure}[p]
@@ -334,6 +339,8 @@ catastrophically small.
     \end{subfigure}
 \end{figure}
 
+\vfill
+
 \subsection{Summary}
 
 Table~\ref{tab:overview} shows the results of our evaluation. The minimum,
@@ -354,7 +361,7 @@ maximum and average over the 5 runs are shown split between our implementation
   \label{tab:overview}
 \end{table}
 
-\begin{figure}[H]
+\begin{figure}[t]
     \centering
     \includegraphics[width=\textwidth]{img/boxplt}
     \caption{Boxplot illustrating stability}
@@ -367,7 +374,7 @@ ELKI's implementation appears extremely unstable, while ours uncovers the
 cluster structure perfectly without fail. The biggest difference in our
 implementation is that we use a different initialization strategy, namely
 kmeans\texttt{++}---this might result in our algorithm having an easier time
-converging to a good minimum since the cluster centres are already
+converging to a good minimum since the cluster centers are already
 well-separated. However, our implementation performed better even when using a
 random seed picking strategy---we suspect that perhaps the eigenvalue
 decomposition is implemented differently, or we are just lucky. We also want to
@@ -375,7 +382,6 @@ note that we use fewer initial seeds than ELKI.
 
 Figure~\ref{fig:box} shows a boxplot of the obtained NMI scores. A more stable implementation
 would have a shorter box, i.e. less variance in the results. Our implementation appears
-much more stable on the given datasets, save for the \texttt{higher\_dimensional} dataset
-which is difficult to cluster.
+a bit more stable on the given datasets.
 
 \end{document}
