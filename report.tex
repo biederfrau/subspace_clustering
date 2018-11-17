@@ -110,7 +110,8 @@ clusters are reached. After a final assignment step the clustering is returned.
     \LineComment{$l_c \Rightarrow$ current dimensionality}
     \LineComment{$S = \{s_1, s_2, ... s_{k_c}\} \Rightarrow$ current set of seeds}
     \State $k_c = k_0;$ $l_c = d;$ \Comment{$k_0 \Rightarrow$ initial \# of seeds} \Comment{$d \Rightarrow$ dimension of the data}
-    \State $S =$ \Call{kmeanspp}{$DB$, $k_c$}; \Comment{choose initial seeds with K-means++}
+    \State Pick $k_0 > k$ points from $DB$ an denote by $S$;
+    \Comment{e.g. randomly or K-means++}
     \ForAll{$i \in \{1 ... k_c\}$}
         $\varepsilon_i = D$; \Comment{initially, $\varepsilon_i$ is the original axis-system}
     \EndFor
