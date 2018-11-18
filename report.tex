@@ -308,9 +308,8 @@ Interestingly, our implementation manages to obtain clusterings that
 look tidier. However, the NMIs are pretty close, as the tidiness of
 the clustering does not match the actual structure in the data.
 
-It appears as if the two implementations pick very different subspaces.
-ELKI's version seems to use a rather complex projection, while our algorithm
-might as well be operating in the original basis.
+Note that we used more intial seeds for this dataset, as this seems to
+help a lot here.
 
 \begin{figure}[p]
     \centering
@@ -366,21 +365,22 @@ catastrophically small.
 
 Table~\ref{tab:overview} shows the results of our evaluation. The minimum,
 maximum and average over the 5 runs are shown split between our implementation
-(DM) and the implementation available in ELKI.
+(DM) and the implementation available in ELKI. Averages that are better than
+ELKI's average NMI are written in bold, although note that some of the differences
+are rather slight.
 
-\begin{table}[btp]\centering
+\begin{table}[]\centering
   \begin{tabular}{lrrrcrrr}\toprule
      & \multicolumn{3}{c}{DM} & \phantom{abc} & \multicolumn{3}{c}{ELKI}\\
     dataset & min & max & avg & & min & max & avg\\ \midrule
-    test & 0.987 & 0.987 & \textbf{0.987} & & 0.537 & 0.987 & 0.811\\
-    test noisy & 0.536 & 0.66 & \emph{0.634} & & 0.537 & 0.659 & 0.634\\
-    higher dimensional & 0.271 & 0.323 & \textbf{0.297} & & 0.188 & 0.356 & 0.258\\
-    paper & 1.0 & 1.0 & \textbf{1.0} & & 0.005 & 1.0 & 0.559\\
+    test & 0.9869 & 0.9869 & \textbf{0.9869} & & 0.5372 & 0.9869 & 0.8106\\
+    test noisy & 0.539 & 0.6596 & \textbf{0.6352} & & 0.5372 & 0.6585 & 0.6342\\
+    higher dimensional & 0.1892 & 0.3368 & \textbf{0.2631} & & 0.1881 & 0.3561 & 0.2578\\
+    paper & 0.6466 & 1.0 & \textbf{0.8863} & & 0.0046 & 1.0 & 0.5594\\
   \bottomrule
   \end{tabular}
-  \caption{Summary of NMI scores}
-  \label{tab:overview}
 \end{table}
+
 
 \begin{figure}[t!]
     \centering
@@ -392,14 +392,14 @@ maximum and average over the 5 runs are shown split between our implementation
 Interestingly, our implementation appears to have a slight advantage over
 ELKI's.  Notice especially the discrepancy with dataset \texttt{paper}, where
 ELKI's implementation appears extremely unstable, while ours uncovers the
-cluster structure perfectly without fail. The biggest difference in our
+cluster structure perfectly 3 out of 5 times, with the two other results being of fairly similar quality. The biggest difference in our
 implementation is that we use a different initialization strategy, namely
 kmeans\texttt{++}---this might result in our algorithm having an easier time
 converging to a good minimum since the cluster centers are already
 well-separated. However, our implementation performed better even when using a
 random seed picking strategy---we suspect that perhaps the eigenvalue
 decomposition is implemented differently, or we are just lucky. We also want to
-note that we use fewer initial seeds than ELKI.
+note that we use fewer initial seeds than ELKI, which defaults to $30 \cdot k$.
 
 Figure~\ref{fig:box} shows a boxplot of the obtained NMI scores. A more stable implementation
 would have a shorter box, i.e. less variance in the results. Our implementation appears

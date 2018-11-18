@@ -5,14 +5,15 @@ puts "\\begin{table}[]\\centering\n  \\begin{tabular}{lrrrcrrr}\\toprule\n"
 puts "#{' '*4} & \\multicolumn{3}{c}{DM} & \\phantom{abc} & \\multicolumn{3}{c}{ELKI}\\\\"
 puts "#{' '*4}dataset & min & max & avg & & min & max & avg\\\\ \\midrule"
 
+ROUND_TO = 4
 files = ['test', 'test_noisy', 'higher_dimensional', 'paper']
 files.each do |f|
   our_nmis = File.read("results/#{f}_NMI.txt").lines.map { |x| x.to_f }
   elki_nmis = Dir[File.join ['elki_results', "elki_#{f}*", 'cluster-evaluation.txt']].map { |f| File.read(f).lines.keep_if { |l| l.start_with? 'NMI Sqrt' }.map { |l| l.split.last.to_f } }.flatten
 
-  avg = (our_nmis.reduce(&:+) / our_nmis.size).round 3
-  avg_elki = (elki_nmis.reduce(&:+) / elki_nmis.size).round 3
-  puts "#{' '*4}#{f.sub('_', ' ')} & #{our_nmis.min.round 3} & #{our_nmis.max.round 3} & #{avg > avg_elki ? '\textbf{' : avg == avg_elki ? '\emph{' : ''}#{avg}#{avg >= avg_elki ? '}' : ''} & & #{elki_nmis.min.round 3} & #{elki_nmis.max.round 3} & #{avg_elki}\\\\"
+  avg = (our_nmis.reduce(&:+) / our_nmis.size).round ROUND_TO
+  avg_elki = (elki_nmis.reduce(&:+) / elki_nmis.size).round ROUND_TO
+  puts "#{' '*4}#{f.sub('_', ' ')} & #{our_nmis.min.round ROUND_TO} & #{our_nmis.max.round ROUND_TO} & #{avg > avg_elki ? '\textbf{' : (avg - avg_elki).abs < 0.01 ? '\emph{' : ''}#{avg}#{avg >= avg_elki ? '}' : ''} & & #{elki_nmis.min.round ROUND_TO} & #{elki_nmis.max.round ROUND_TO} & #{avg_elki}\\\\"
 
   File.open("#{f}_summary.dat", 'w+') do |fh|
     our_nmis.zip(elki_nmis).each do |o, e|

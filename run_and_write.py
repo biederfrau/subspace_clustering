@@ -4,7 +4,7 @@ import orclus
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-from sys import argv
+from sys import argv, exit
 from pathlib import Path
 import random
 
@@ -23,12 +23,12 @@ k = int(get('-k') or 2)
 l = int(get('-l') or 2)
 
 csv = pd.read_csv(f, delim_whitespace=True, comment='#', header=None)
-mat = np.matrix(csv.values[:, 0:2], dtype=np.float32)
+mat = np.matrix(csv.values[:, 0:csv.shape[1]-1], dtype=np.float32)
 
 nmis = []
 predictions = []
 for i in range(5):
-    clusters, seeds, vectors = orclus.orclus(mat, k, l, k0=50)
+    clusters, seeds, vectors = orclus.orclus(mat, k, l, k0=80 if Path(f).stem == 'higher_dimensional' else 50)
     pred = orclus.predict(mat, seeds, vectors)
 
     predictions.append(pred)

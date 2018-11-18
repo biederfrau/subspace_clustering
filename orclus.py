@@ -16,7 +16,7 @@ def pdist(x, y, vectors):
 def cluster_energy(cluster, centroid, vectors):
     return np.sum([pdist(p, centroid, vectors)**2 for p in cluster])/len(cluster)
 
-def orclus(DB, k, l, alpha=0.5, k0=None):
+def orclus(DB, k, l, alpha=0.5, k0=None, seeding_fun=seeding_strategy.kmeanspp):
     kc = 5*k if k0 is None else k0 # current number of seeds
     lc = DB.shape[1] # current dimensionality associated with each seed
 
@@ -32,8 +32,8 @@ def orclus(DB, k, l, alpha=0.5, k0=None):
         print("k is larger or equal n but should be k << n")
         return None
 
-    # choose initial seeds with K-means++
-    seeds = seeding_strategy.kmeanspp(DB, kc)
+    # choose initial seeds with K-means++ (default) or randomly
+    seeds = seeding_fun(DB, kc)
     # initially, the vectors defining defining the subspaces are the original axis-system
     vectors = [np.eye(lc)]*kc
 
