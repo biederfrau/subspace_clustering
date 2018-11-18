@@ -360,7 +360,11 @@ Figure~\ref{fig:paper_results} shows the results. As this is a very simple
 data set, we are a bit worried that ELKI does not manage to find this
 clustering in every try---out of 5 runs, only one run managed to reach a
 NMI of 1. One run was even only able to reach a NMI of 0.005, which is
-catastrophically small.
+catastrophically small. Our implementation also returns wildly different
+clusterings, which is unfortunate, as this dataset indeed does have
+very clear clusters. The culprit is probably the noise dimensions
+being considered, which will return rather unpredictable cluster basis
+vectors.
 
 \subsection{Summary}
 

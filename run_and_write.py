@@ -40,10 +40,10 @@ for i in range(5):
 
 print(f"{'='*32}\nAverage NMI score: {np.average(nmis)}")
 
-with open(f"{Path(f).stem}_NMI.txt", "w+") as fh:
+with open(f"results/{Path(f).stem}_NMI.txt", "w+") as fh:
     for nmi in nmis:
         fh.write(f"{nmi}\n")
 
-with open(f"{Path(f).stem}_best_clustering.txt", "w+") as fh:
+with open(f"results/{Path(f).stem}_best_clustering.txt", "w+") as fh:
     for c in predictions[np.argmax(nmi)]:
         fh.write(f"{c}\n")
