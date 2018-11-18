@@ -9,7 +9,7 @@ ROUND_TO = 4
 files = ['test', 'test_noisy', 'higher_dimensional', 'paper']
 files.each do |f|
   our_nmis = File.read("results/#{f}_NMI.txt").lines.map { |x| x.to_f }
-  elki_nmis = Dir[File.join ['elki_results', "elki_#{f}*", 'cluster-evaluation.txt']].map { |f| File.read(f).lines.keep_if { |l| l.start_with? 'NMI Sqrt' }.map { |l| l.split.last.to_f } }.flatten
+  elki_nmis = Dir[File.join ['elki_results', "elki_#{f}?", 'cluster-evaluation.txt']].map { |f| File.read(f).lines.keep_if { |l| l.start_with? 'NMI Sqrt' }.map { |l| l.split.last.to_f } }.flatten
 
   avg = (our_nmis.reduce(&:+) / our_nmis.size).round ROUND_TO
   avg_elki = (elki_nmis.reduce(&:+) / elki_nmis.size).round ROUND_TO

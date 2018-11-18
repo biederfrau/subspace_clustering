@@ -372,13 +372,13 @@ Table~\ref{tab:overview} shows the results of our evaluation. The minimum,
 maximum and average over the 5 runs are shown split between our implementation
 (DM) and the implementation available in ELKI. Averages that are better than
 ELKI's average NMI are written in bold, although note that some of the differences
-are rather slight.
+are rather slight. Equal results are written in italic.
 
 \begin{table}[]\centering
-  \begin{tabular}{lrrrcrrr}\toprule
+    \begin{tabular}{lrrrcrrr}\toprule
      & \multicolumn{3}{c}{DM} & \phantom{abc} & \multicolumn{3}{c}{ELKI}\\
     dataset & min & max & avg & & min & max & avg\\ \midrule
-    test & 0.9869 & 0.9869 & \textbf{0.9869} & & 0.5372 & 0.9869 & 0.8106\\
+    test & 0.9869 & 0.9869 & \emph{0.9869} & & 0.9869 & 0.9869 & 0.9869\\
     test noisy & 0.539 & 0.6596 & \textbf{0.6352} & & 0.5372 & 0.6585 & 0.6342\\
     higher dimensional & 0.1892 & 0.3368 & \textbf{0.2631} & & 0.1881 & 0.3561 & 0.2578\\
     paper & 0.6466 & 1.0 & \textbf{0.8863} & & 0.0046 & 1.0 & 0.5594\\
