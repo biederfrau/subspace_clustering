@@ -31,7 +31,7 @@ def orclus(DB, k, l, alpha=0.5, k0=None):
     if k >= DB.shape[0]:
         print("k is larger or equal n but should be k << n")
         return None
-    
+
     # choose initial seeds with K-means++
     seeds = seeding_strategy.kmeanspp(DB, kc)
     # initially, the vectors defining defining the subspaces are the original axis-system
@@ -76,7 +76,7 @@ def assign(DB, seeds, vectors):
             dist.append(pdist(p, s, v))
         # add p to the cluster associated with the closest seed
         clusters[np.argmin(dist)].append(p)
-    
+
     # set seeds to new cluster centers
     for i in range(0, len(seeds)):
         seeds[i] = np.sum(clusters[i], axis=0)/len(clusters[i])
@@ -88,7 +88,7 @@ def merge(seeds, clusters, k_new, l_new):
 
     for a, b in itertools.combinations(enumerate(clusters), 2):
         merged_cluster = a[1] + b[1]
-        
+
         # define vectors by eigenvectors for l_new smallest eigenvalues
         vectors = find_vectors(merged_cluster, l_new)
         # centroid of merged clusters
@@ -101,15 +101,15 @@ def merge(seeds, clusters, k_new, l_new):
     while len(seeds) > k_new:
         # merge cluster pair i, j with smallest energy value
         i_, j_, centroid, energy = min(merged_clusters, key=lambda t: t[3])
-     
+
         seeds[i_] = centroid
         clusters[i_] += clusters[j_]
-        
+
         del seeds[j_]
         del clusters[j_]
 
         merged_clusters = [t for t in merged_clusters if t[0] != j_ and t[1] != j_]
-        #renumber the seeds/clusters
+        # renumber the seeds/clusters
         for idx, (i, j, centroid, energy) in enumerate(merged_clusters):
             if i > j_ and j > j_:
                 merged_clusters[idx] = (i-1, j-1, centroid, energy)
@@ -117,8 +117,8 @@ def merge(seeds, clusters, k_new, l_new):
                 merged_clusters[idx] = (i-1, j,   centroid, energy)
             elif j > j_:
                 merged_clusters[idx] = (i  , j-1, centroid, energy)
-        
-        #recompute energy for new cluster
+
+        # recompute energy for new cluster
         for idx, (i, j, centroid, energy) in enumerate(merged_clusters):
             if i != i_: continue
 
